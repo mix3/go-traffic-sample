@@ -35,6 +35,9 @@ func newTestDB(t *testing.T) *genmai.DB {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if _, err := db.DB().Exec("DROP TABLE IF EXISTS todo"); err != nil {
+		t.Fatal(err)
+	}
 	err = db.CreateTable(&Todo{})
 	if err != nil {
 		t.Fatal(err)
