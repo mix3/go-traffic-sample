@@ -4,7 +4,7 @@ import "github.com/naoina/genmai"
 
 func TodoList(db *genmai.DB) ([]Todo, error) {
 	var results []Todo
-	err := db.Select(&results)
+	err := db.Select(&results, db.OrderBy("id", genmai.ASC))
 	return results, err
 }
 
