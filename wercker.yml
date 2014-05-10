@@ -1,4 +1,5 @@
 box: wercker/golang
+# Add services here
 # Build definition
 build:
   # The steps that will be executed on build
@@ -9,20 +10,20 @@ build:
 
     # Gets the dependencies
     - script:
-      name: go get
-      code: |
-        cd $WERCKER_SOURCE_DIR
-        go version
-        go get -t ./...
+        name: go get
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          go version
+          go get ./...
 
     # Build the project
     - script:
-      name: go build
-      code: |
-        go build ./...
+        name: go build
+        code: |
+          go build ./...
 
     # Test the project
     - script:
-      name: go test
-      code: |
-        go test ./...
+        name: go test
+        code: |
+          go test ./...
