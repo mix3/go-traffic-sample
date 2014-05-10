@@ -13,9 +13,9 @@ import (
 func testDB(dsn ...string) (*genmai.DB, error) {
 	switch os.Getenv("DB") {
 	case "mysql":
-		return genmai.New(&genmai.MySQLDialect{}, "travis@/test")
+		return genmai.New(&genmai.MySQLDialect{}, "travis@/go_traffic_sample_test")
 	case "postgres":
-		return genmai.New(&genmai.PostgresDialect{}, "user=postgres dbname=test sslmode=disable")
+		return genmai.New(&genmai.PostgresDialect{}, "user=postgres dbname=go_traffic_sample_test sslmode=disable")
 	default:
 		var DSN string
 		switch len(dsn) {
