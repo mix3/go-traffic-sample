@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/mix3/go-traffic-sample/model"
+	"go-traffic-sample/model"
+
 	"github.com/naoina/genmai"
 	"github.com/pilu/traffic"
 )
@@ -17,6 +18,11 @@ func init() {
 	router.Post("/switch/:id", SwitchHandler)
 	router.Post("/delete/:id", DeleteHandler)
 	router.ErrorHandler = ErrorHandler
+
+	// for heroku
+	if traffic.Env() == "production" {
+		router.Use(traffic.NewStaticMiddleware(traffic.PublicPath()))
+	}
 
 	db = model.DBGet()
 }
