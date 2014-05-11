@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go-traffic-sample/model"
+	"github.com/mix3/go-traffic-sample/model"
 
 	"github.com/naoina/genmai"
 	"github.com/pilu/traffic"

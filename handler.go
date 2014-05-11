@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"go-traffic-sample/model"
+	"github.com/mix3/go-traffic-sample/model"
 
 	"github.com/pilu/traffic"
 )
