@@ -2,13 +2,21 @@ package model
 
 import "github.com/naoina/genmai"
 
-func TodoList(db *genmai.DB) ([]Todo, error) {
+type Todo struct {
+	Id        int64  `db:"pk" json:"id"`
+	Title     string `json:"title"`
+	Completed bool   `json:"completed"`
+}
+
+func TodoList() ([]Todo, error) {
+	db := GetDB()
 	var results []Todo
 	err := db.Select(&results, db.OrderBy("id", genmai.ASC))
 	return results, err
 }
 
-func TodoCreate(db *genmai.DB, title string) error {
+func TodoCreate(title string) error {
+	db := GetDB()
 	_, err := db.Insert(&Todo{
 		Title:     title,
 		Completed: false,
@@ -16,7 +24,8 @@ func TodoCreate(db *genmai.DB, title string) error {
 	return err
 }
 
-func TodoSwitch(db *genmai.DB, id int64) error {
+func TodoSwitch(id int64) error {
+	db := GetDB()
 	var results []Todo
 	if err := db.Select(&results, db.Where("id", "=", id)); err != nil {
 		return err
@@ -27,8 +36,21 @@ func TodoSwitch(db *genmai.DB, id int64) error {
 	return err
 }
 
-func TodoDelete(db *genmai.DB, id int64) error {
+func TodoDelete(id int64) error {
+	db := GetDB()
 	obj := Todo{Id: id}
 	_, err := db.Delete(&obj)
 	return err
+}
+
+func TodoDeleteAll() error {
+	db := GetDB()
+	var targets []Todo
+	if err := db.Select(&targets, db.Where("completed", "=", 1)); err != nil {
+		return err
+	}
+	if _, err := db.Delete(&targets); err != nil {
+		return err
+	}
+	return nil
 }

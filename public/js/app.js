@@ -49,20 +49,15 @@ angular.module('TodoApp', [])
 
 		// delete all
 		$scope.deleteAllCompletedTodo = function() {
-			var oldTodos = $scope.todos
-			angular.forEach(oldTodos, function(todo) {
-				if (todo.completed) {
-					$http({
-						method: 'POST',
-						url: '/delete/' + todo.id,
-						transformRequest: transformRequest,
-						data: {},
-						headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-					}).success(function(data) {
-						$scope.todos = data.result
-					})
-				}
-			});
+			$http({
+				method: 'POST',
+				url: '/delete',
+				transformRequest: transformRequest,
+				data: {},
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).success(function(data) {
+				$scope.todos = data.result
+			})
 		};
 
 		// delete

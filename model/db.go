@@ -11,7 +11,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func DBGet() *genmai.DB {
+var db *genmai.DB
+
+// for test
+var initDB = func() *genmai.DB {
 	driver := fmt.Sprintf("%s", traffic.GetVar("driver"))
 	dsn := fmt.Sprintf("%s", traffic.GetVar("dsn"))
 	var d genmai.Dialect
@@ -23,12 +26,21 @@ func DBGet() *genmai.DB {
 	case "sqlite3":
 		d = &genmai.SQLite3Dialect{}
 	default:
-		panic(fmt.Errorf("kocha: genmai: unsupported driver type: %v", driver))
+		panic(fmt.Errorf("genmai: unsupported driver type: %v", driver))
 	}
-	db, err := genmai.New(d, dsn)
+	var err error
+	db, err = genmai.New(d, dsn)
 	if err != nil {
 		panic(err)
 	}
 	db.CreateTableIfNotExists(&Todo{})
+	return db
+}
+
+func GetDB() *genmai.DB {
+	if db != nil {
+		return db
+	}
+	db = initDB()
 	return db
 }
