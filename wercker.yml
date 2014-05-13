@@ -17,7 +17,6 @@ build:
           go get ./...
           go get github.com/axw/gocov/gocov
           go get github.com/mattn/goveralls
-          go get code.google.com/p/go.tools/cmd/cover
 
     # Build the project
     - script:
