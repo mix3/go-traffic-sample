@@ -12,9 +12,9 @@ import (
 func testDB() (*genmai.DB, error) {
 	switch os.Getenv("DB") {
 	case "mysql":
-		return genmai.New(&genmai.MySQLDialect{}, "travis@/go_traffic_sample_test")
+		return genmai.New(&genmai.MySQLDialect{}, os.Getenv("DSN"))
 	case "postgres":
-		return genmai.New(&genmai.PostgresDialect{}, "user=postgres dbname=go_traffic_sample_test sslmode=disable")
+		return genmai.New(&genmai.PostgresDialect{}, os.Getenv("DSN"))
 	default:
 		return genmai.New(&genmai.SQLite3Dialect{}, ":memory:")
 	}

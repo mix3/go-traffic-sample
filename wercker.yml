@@ -1,5 +1,8 @@
 box: wercker/golang
 # Add services here
+services:
+  - wercker/mysql
+  - wercker/postgresql
 # Build definition
 build:
   # The steps that will be executed on build
@@ -26,9 +29,19 @@ build:
 
     # Test the project
     - script:
-        name: go test
+        name: go test with sqlite
         code: |
           go test ./...
+
+    - script:
+        name: go test with mysql
+        code: |
+          DB=mysql DSN="$WERCKER_MYSQL_USERNAME:$WERCKER_MYSQL_PASSWORD@tcp($WERCKER_MYSQL_HOST:$WERCKER_MYSQL_PORT)/$WERCKER_MYSQL_DATABASE" go test ./...
+
+    - script:
+        name: go test with postgres
+        code: |
+          DB=postgres DSN="user=$WERCKER_POSTGRESQL_USERNAME password=$WERCKER_POSTGRESQL_PASSWORD host=$WERCKER_POSTGRESQL_HOST port=$WERCKER_POSTGRESQL_PORT dbname=$WERCKER_POSTGRESQL_DATABASE sslmode=disable" go test ./...
 
     - script:
         name: go test -cover
