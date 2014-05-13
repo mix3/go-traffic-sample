@@ -20,13 +20,13 @@ env:
   - secure: "dmSep1UxjYFZZkfakOLPV9DGs2VqLrqeXkBZM/87R6gMPlmw/PxJxwrXZ0tC9lHnihrUBKxOR1dDufk4GSpjkEmHx7LufbqkVQ4FRxp0Hn6bcY0IU51u0UVGKejiCqbGHTZ+N5qKSYJ2Z4YGmtNQSJ7IZaEoBcqWfs1WkxuWyMM="
  matrix:
   - DB=sqlite3
-  - DB=mysql
-  - DB=postgres
+  - DB=mysql DSN="travis@/test"
+  - DB=postgres DSN="user=postgres dbname=test sslmode=disable"
 
 before_script:
- - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'DROP DATABASE IF EXISTS go_traffic_sample_test;' -U postgres; fi"
- - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'CREATE DATABASE go_traffic_sample_test;' -U postgres; fi"
- - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE IF NOT EXISTS go_traffic_sample_test;'; fi"
+ - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'DROP DATABASE IF EXISTS test;' -U postgres; fi"
+ - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'CREATE DATABASE test;' -U postgres; fi"
+ - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE IF NOT EXISTS test;'; fi"
 
 script:
  - go test -v ./...

@@ -24,6 +24,16 @@ build:
 
     # Test the project
     - script:
-        name: go test
+        name: go test with sqlite
         code: |
           go test ./...
+
+    - script:
+        name: go test with mysql
+        code: |
+          DB=mysql DSN="$WERCKER_MYSQL_USERNAME:$WERCKER_MYSQL_PASSWORD@tcp($WERCKER_MYSQL_HOST:$WERCKER_MYSQL_PORT)/$WERCKER_MYSQL_DATABASE" go test ./...
+
+    - script:
+        name: go test with postgres
+        code: |
+          DB=postgres DSN="user=$WERCKER_MYSQL_USERNAME password=$WERCKER_MYSQL_PASSWORD host=$WERCKER_MYSQL_HOST port=$WERCKER_MYSQL_PORT dbname=$WERCKER_MYSQL_DATABASE sslmode=disable" go test ./...
