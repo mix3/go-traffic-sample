@@ -1,5 +1,8 @@
 box: wercker/golang
 # Add services here
+services:
+  - wercker/mysql
+  - wercker/postgresql
 # Build definition
 build:
   # The steps that will be executed on build
