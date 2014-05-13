@@ -18,6 +18,8 @@ build:
           cd $WERCKER_SOURCE_DIR
           go version
           go get ./...
+          go get github.com/axw/gocov/gocov
+          go get github.com/mattn/goveralls
 
     # Build the project
     - script:
@@ -40,3 +42,12 @@ build:
         name: go test with postgres
         code: |
           DB=postgres DSN="user=$WERCKER_POSTGRESQL_USERNAME password=$WERCKER_POSTGRESQL_PASSWORD host=$WERCKER_POSTGRESQL_HOST port=$WERCKER_POSTGRESQL_PORT dbname=$WERCKER_POSTGRESQL_DATABASE sslmode=disable" go test ./...
+
+    - script:
+        name: go test -cover
+        code: |
+          echo "mode: count" > acc.out
+          for t in `go test ./... | awk '{print $2}'`; do go test -covermode=count -coverprofile=profile.out $t; if [ -f profile.out ]; then cat profile.out | grep -v "mode: count" >> acc.out; fi; done
+          goveralls -coverprofile=acc.out -service='wercker.com' -repotoken=$COVERALLS_TOKEN
+          rm -rf ./profile.out
+          rm -rf ./acc.out
