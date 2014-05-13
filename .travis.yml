@@ -31,15 +31,4 @@ before_script:
 
 script:
  - go test -v ./...
- - |
-  echo "mode: count" > acc.out
-  for t in `go test ./... | awk '{print $2}'`
-  do
-   go test -covermode=count -coverprofile=profile.out $t
-   if [ -f profile.out ]; then
-    cat profile.out | grep -v "mode: count" >> acc.out
-   fi
-  done
-  $HOME/gopath/bin/goveralls -coverprofile=acc.out -repotoken=$COVERALLS_TOKEN
-  rm -rf ./profile.out
-  rm -rf ./acc.out
+ - $HOME/gopath/bin/goveralls -repotoken=$COVERALLS_TOKEN
