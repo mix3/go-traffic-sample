@@ -12,11 +12,17 @@ install:
  - go get github.com/lib/pq
  - go get github.com/mattn/go-sqlite3
  - go get github.com/naoina/genmai
+ - go get github.com/axw/gocov/gocov
+ - go get github.com/mattn/goveralls
+ - go get code.google.com/p/go.tools/cmd/cover
 
 env:
- - DB=sqlite3
- - DB=mysql
- - DB=postgres
+ grobal:
+  - secure: "dmSep1UxjYFZZkfakOLPV9DGs2VqLrqeXkBZM/87R6gMPlmw/PxJxwrXZ0tC9lHnihrUBKxOR1dDufk4GSpjkEmHx7LufbqkVQ4FRxp0Hn6bcY0IU51u0UVGKejiCqbGHTZ+N5qKSYJ2Z4YGmtNQSJ7IZaEoBcqWfs1WkxuWyMM="
+ matrix:
+  - DB=sqlite3
+  - DB=mysql
+  - DB=postgres
 
 before_script:
  - sh -c "if [ '$DB' = 'postgres' ]; then psql -c 'DROP DATABASE IF EXISTS go_traffic_sample_test;' -U postgres; fi"
@@ -25,3 +31,15 @@ before_script:
 
 script:
  - go test -v ./...
+ - |
+  echo "mode: count" > acc.out
+  for t in `go test ./... | awk '{print $2}'`
+  do
+   go test -covermode=count -coverprofile=profile.out $t
+   if [ -f profile.out ]; then
+    cat profile.out | grep -v "mode: count" >> acc.out
+   fi
+  done
+  $HOME/gopath/bin/goveralls -coverprofile=acc.out -repotoken=$COVERALLS_TOKEN
+  rm -rf ./profile.out
+  rm -rf ./acc.out
