@@ -28,7 +28,7 @@ func RootHandler(w traffic.ResponseWriter, r *traffic.Request) {
 }
 
 func ListHandler(w traffic.ResponseWriter, r *traffic.Request) {
-	result, err := model.TodoList(db)
+	result, err := model.TodoList()
 	if err != nil {
 		panic(err)
 	}
@@ -41,10 +41,10 @@ func ListHandler(w traffic.ResponseWriter, r *traffic.Request) {
 
 func CreateHandler(w traffic.ResponseWriter, r *traffic.Request) {
 	title := r.FormValue("title")
-	if err := model.TodoCreate(db, title); err != nil {
+	if err := model.TodoCreate(title); err != nil {
 		panic(err)
 	}
-	result, err := model.TodoList(db)
+	result, err := model.TodoList()
 	if err != nil {
 		panic(err)
 	}
@@ -60,10 +60,10 @@ func SwitchHandler(w traffic.ResponseWriter, r *traffic.Request) {
 	if err != nil {
 		panic(err)
 	}
-	if err = model.TodoSwitch(db, id); err != nil {
+	if err = model.TodoSwitch(id); err != nil {
 		panic(err)
 	}
-	result, err := model.TodoList(db)
+	result, err := model.TodoList()
 	if err != nil {
 		panic(err)
 	}
@@ -79,10 +79,25 @@ func DeleteHandler(w traffic.ResponseWriter, r *traffic.Request) {
 	if err != nil {
 		panic(err)
 	}
-	if err = model.TodoDelete(db, id); err != nil {
+	if err = model.TodoDelete(id); err != nil {
 		panic(err)
 	}
-	result, err := model.TodoList(db)
+	result, err := model.TodoList()
+	if err != nil {
+		panic(err)
+	}
+	w.WriteJSON(&ResponseData{
+		Success: true,
+		Message: "",
+		Result:  result,
+	})
+}
+
+func DeleteAllHandler(w traffic.ResponseWriter, r *traffic.Request) {
+	if err := model.TodoDeleteAll(); err != nil {
+		panic(err)
+	}
+	result, err := model.TodoList()
 	if err != nil {
 		panic(err)
 	}

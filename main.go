@@ -2,13 +2,10 @@ package main
 
 import (
 	"github.com/mix3/go-traffic-sample/model"
-
-	"github.com/naoina/genmai"
 	"github.com/pilu/traffic"
 )
 
 var router *traffic.Router
-var db *genmai.DB
 
 func init() {
 	router = traffic.New()
@@ -17,16 +14,18 @@ func init() {
 	router.Post("/create", CreateHandler)
 	router.Post("/switch/:id", SwitchHandler)
 	router.Post("/delete/:id", DeleteHandler)
+	router.Post("/delete", DeleteAllHandler)
 	router.ErrorHandler = ErrorHandler
 
 	// for heroku
 	if traffic.Env() == "production" {
 		router.Use(traffic.NewStaticMiddleware(traffic.PublicPath()))
 	}
-
-	db = model.DBGet()
 }
 
 func main() {
+	db := model.GetDB()
+	defer db.Close()
+
 	router.Run()
 }
